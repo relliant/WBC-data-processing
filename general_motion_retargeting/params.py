@@ -23,6 +23,7 @@ ROBOT_XML_DICT = {
     "tienkung": ASSET_ROOT / "tienkung" / "mjcf" / "tienkung.xml",
     "pal_talos": ASSET_ROOT / "pal_talos" / "talos.xml",
     "fourier_gr3": ASSET_ROOT / "fourier_gr3v2_1_1" / "mjcf" / "gr3v2_1_1_dummy_hand.xml",
+    "walker": ASSET_ROOT / "walker" / "urdf" / "walker_tienkung_ei.xml",
 }
 
 IK_CONFIG_DICT = {
@@ -45,6 +46,7 @@ IK_CONFIG_DICT = {
         "pnd_adam_lite": IK_CONFIG_ROOT / "smplx_to_adam.json",
         "tienkung": IK_CONFIG_ROOT / "smplx_to_tienkung.json",
         "fourier_gr3": IK_CONFIG_ROOT / "smplx_to_gr3.json",
+        "walker": IK_CONFIG_ROOT / "smplx_to_walker.json",
     },
     "bvh_lafan1":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_lafan1_to_g1.json",
@@ -54,9 +56,12 @@ IK_CONFIG_DICT = {
         "stanford_toddy": IK_CONFIG_ROOT / "bvh_lafan1_to_toddy.json",
         "engineai_pm01": IK_CONFIG_ROOT / "bvh_lafan1_to_pm01.json",
         "pal_talos": IK_CONFIG_ROOT / "bvh_to_talos.json",
+        "tienkung": IK_CONFIG_ROOT / "bvh_lafan1_to_tienkung.json",
+        "walker": IK_CONFIG_ROOT / "bvh_lafan1_to_walker.json",
     },
     "bvh_nokov":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_nokov_to_g1.json",
+        "walker": IK_CONFIG_ROOT / "bvh_nokov_to_walker.json",
     },
     "bvh_xsens":{
         "unitree_g1": IK_CONFIG_ROOT / "bvh_xsens_to_g1.json",
@@ -68,6 +73,7 @@ IK_CONFIG_DICT = {
     },
     "fbx_offline":{
         "unitree_g1": IK_CONFIG_ROOT / "fbx_offline_to_g1.json",
+        "walker": IK_CONFIG_ROOT / "fbx_offline_to_walker.json",
     },
     
     "xrobot":{
@@ -98,6 +104,7 @@ ROBOT_BASE_DICT = {
     "tienkung": "Base_link",
     "pal_talos": "base_link",
     "fourier_gr3": "base_link",
+    "walker": "pelvis",
 }
 
 VIEWER_CAM_DISTANCE_DICT = {
@@ -119,4 +126,5 @@ VIEWER_CAM_DISTANCE_DICT = {
     "tienkung": 3.0,
     "pal_talos": 3.0,
     "fourier_gr3": 2.0,
+    "walker": 3.0,
 }

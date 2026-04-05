@@ -10,6 +10,7 @@ from general_motion_retargeting import RobotMotionViewer
 from general_motion_retargeting.utils.smpl import load_smplx_file, get_smplx_data_offline_fast
 
 from rich import print
+from general_motion_retargeting.trajectory_smoother import TrajectorySmoother
 
 if __name__ == "__main__":
     
@@ -33,7 +34,7 @@ if __name__ == "__main__":
         choices=["unitree_g1", "unitree_g1_with_hands", "unitree_h1", "unitree_h1_2",
                  "booster_t1", "booster_t1_29dof","stanford_toddy", "fourier_n1", 
                 "engineai_pm01", "kuavo_s45", "hightorque_hi", "galaxea_r1pro", "berkeley_humanoid_lite", "booster_k1",
-                "pnd_adam_lite", "openloong", "tienkung", "fourier_gr3"],
+                "pnd_adam_lite", "openloong", "tienkung", "fourier_gr3", "walker"],
         default="unitree_g1",
     )
     
@@ -62,6 +63,13 @@ if __name__ == "__main__":
         default=False,
         action="store_true",
         help="Limit the rate of the retargeted robot motion to keep the same as the human motion.",
+    )
+
+    parser.add_argument(
+        "--fft",
+        default=False,
+        action="store_true",
+        help="Apply FFT-based trajectory smoothing to joint positions before saving.",
     )
 
     args = parser.parse_args()
@@ -153,6 +161,9 @@ if __name__ == "__main__":
         # save from wxyz to xyzw
         root_rot = np.array([qpos[3:7][[1,2,3,0]] for qpos in qpos_list])
         dof_pos = np.array([qpos[7:] for qpos in qpos_list])
+        if args.fft:
+            smoother = TrajectorySmoother(cutoff=0.2)
+            dof_pos = np.array(smoother.smooth_arrays(dof_pos.T)).T
         local_body_pos = None
         body_names = None
         
