@@ -37,7 +37,7 @@ def check_memory(threshold_gb=30):  # adjust based on your available memory
 HERE = pathlib.Path(__file__).parent
 
 
-def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_folder, total_files, verbose=False, use_fft=False):
+def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_folder, total_files, verbose=False, use_fft=False, fft_cutoff=0.2):
     def log_memory(message):
         if verbose:
             process = psutil.Process(os.getpid())
@@ -90,7 +90,7 @@ def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_fo
     qpos_list = np.array(qpos_list)
 
     if use_fft:
-        smoother = TrajectorySmoother(cutoff=0.2)
+        smoother = TrajectorySmoother(cutoff=fft_cutoff)
         dof_pos_raw = qpos_list[:, 7:]
         qpos_list[:, 7:] = np.array(smoother.smooth_arrays(dof_pos_raw.T)).T
     log_memory("After retargeting")
@@ -187,6 +187,8 @@ def main():
     parser.add_argument("--num_cpus", default=4, type=int)
     parser.add_argument("--fft", default=False, action="store_true",
                         help="Apply FFT-based trajectory smoothing to joint positions.")
+    parser.add_argument("--fft_cutoff", default=0.2, type=float,
+                        help="FFT low-pass cutoff ratio (0.0~1.0, smaller = smoother, default: 0.2).")
     args = parser.parse_args()
     
     # print the total number of cpus and gpus
@@ -246,8 +248,9 @@ def main():
     total_files = len(args_list)
     print(f"Total number of files to process: {total_files}")
     use_fft = args.fft
+    fft_cutoff = args.fft_cutoff
     with mp.Pool(args.num_cpus) as pool:
-        pool.starmap(process_file, [a + (total_files, verbose, use_fft) for a in args_list])
+        pool.starmap(process_file, [a + (total_files, verbose, use_fft, fft_cutoff) for a in args_list])
 
     print("Done. Saved to ", tgt_folder)
 

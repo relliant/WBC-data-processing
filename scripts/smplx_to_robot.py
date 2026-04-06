@@ -72,6 +72,13 @@ if __name__ == "__main__":
         help="Apply FFT-based trajectory smoothing to joint positions before saving.",
     )
 
+    parser.add_argument(
+        "--fft_cutoff",
+        default=0.2,
+        type=float,
+        help="FFT low-pass cutoff ratio (0.0~1.0, smaller = smoother, default: 0.2).",
+    )
+
     args = parser.parse_args()
 
 
@@ -162,7 +169,7 @@ if __name__ == "__main__":
         root_rot = np.array([qpos[3:7][[1,2,3,0]] for qpos in qpos_list])
         dof_pos = np.array([qpos[7:] for qpos in qpos_list])
         if args.fft:
-            smoother = TrajectorySmoother(cutoff=0.2)
+            smoother = TrajectorySmoother(cutoff=args.fft_cutoff)
             dof_pos = np.array(smoother.smooth_arrays(dof_pos.T)).T
         local_body_pos = None
         body_names = None
