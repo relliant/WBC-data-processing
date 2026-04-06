@@ -38,8 +38,8 @@ def main():
     # 基础参数
     parser.add_argument("--input", help="输入的 CSV 文件路径")
     parser.add_argument("-o", "--output", help="输出的 CSV 文件路径 (默认: 原文件名_smoothed.csv)")
-    parser.add_argument("-c", "--cutoff", type=float, default=0.2,
-                        help="截止频率比例 (0.0 到 1.0，越小越平滑，默认: 0.05)")
+    parser.add_argument("-c", "--cutoff", type=float, default=0.15,
+                        help="截止频率比例 (0.0 到 1.0，越小越平滑，默认: 0.15)")
     parser.add_argument("-s", "--skip", type=int, default=7,
                         help="跳过的前几列（通常是 Root 坐标，不进行平滑，默认: 7）")
 

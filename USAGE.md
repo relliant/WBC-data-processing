@@ -30,7 +30,7 @@ python scripts/smplx_to_robot.py \
 | `--loop` | Loop the motion in the viewer |
 | `--record_video` | Record the MuJoCo viewer to a video file |
 | `--fft` | Apply FFT-based low-pass smoothing to joint trajectories before saving |
-| `--fft_cutoff` | Cutoff frequency ratio for FFT smoothing (0.0~1.0, smaller = smoother, default: `0.2`) |
+| `--fft_cutoff` | Cutoff frequency ratio for FFT smoothing (0.0~1.0, smaller = smoother, default: `0.15`) |
 
 Example:
 ```bash

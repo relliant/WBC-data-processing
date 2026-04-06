@@ -120,7 +120,7 @@ def main():
     parser.add_argument("-o", "--output", help="输出路径或文件夹")
 
     # 平滑参数
-    parser.add_argument("-c", "--cutoff", type=float, default=0.2, help="截止频率比例 (默认: 0.2)")
+    parser.add_argument("-c", "--cutoff", type=float, default=0.15, help="截止频率比例 (默认: 0.15)")
     parser.add_argument("-s", "--skip", type=int, default=7, help="跳过前几列 (默认: 7)")
 
     # 绘图参数
