@@ -168,6 +168,10 @@ if __name__ == "__main__":
         # save from wxyz to xyzw
         root_rot = np.array([qpos[3:7][[1,2,3,0]] for qpos in qpos_list])
         dof_pos = np.array([qpos[7:] for qpos in qpos_list])
+        if args.robot == "walker":
+            # remove finger joints: dof_pos cols 23-34 (left hand), 42-53 (right hand)
+            non_finger = list(range(23)) + list(range(35, 42))
+            dof_pos = dof_pos[:, non_finger]
         if args.fft:
             smoother = TrajectorySmoother(cutoff=args.fft_cutoff)
             dof_pos = np.array(smoother.smooth_arrays(dof_pos.T)).T

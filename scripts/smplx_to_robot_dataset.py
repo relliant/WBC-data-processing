@@ -2,7 +2,13 @@ import argparse
 import json
 import pathlib
 import os
+import sys
 import multiprocessing as mp
+
+HERE = pathlib.Path(__file__).resolve().parent
+REPO_ROOT = HERE.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 import mujoco as mj
 import numpy as np
@@ -32,9 +38,6 @@ def check_memory(threshold_gb=30):  # adjust based on your available memory
         print(f"[WARNING] Memory usage:{used_memory_gb:.2f} GB, available:{available_memory_gb:.2f} GB, exceeding the threshold of {threshold_gb} GB.")
         return True
     return False
-
-
-HERE = pathlib.Path(__file__).parent
 
 
 def process_file(smplx_file_path, tgt_file_path, tgt_robot, SMPLX_FOLDER, tgt_folder, total_files, verbose=False, use_fft=False, fft_cutoff=0.2):

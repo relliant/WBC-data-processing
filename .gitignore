@@ -114,3 +114,5 @@ yaml_to_flat_csv.py
 compute_rotation.py
 
 *.STL
+*.csv
+*.png

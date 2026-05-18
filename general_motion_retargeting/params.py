@@ -101,7 +101,7 @@ ROBOT_BASE_DICT = {
     "berkeley_humanoid_lite": "imu_2",
     "booster_k1": "Trunk",
     "pnd_adam_lite": "pelvis",
-    "tienkung": "Base_link",
+    "tienkung": "pelvis",
     "pal_talos": "base_link",
     "fourier_gr3": "base_link",
     "walker": "pelvis",

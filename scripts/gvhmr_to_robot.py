@@ -1,9 +1,15 @@
 import argparse
 import pathlib
 import os
+import sys
 import time
 
 import numpy as np
+
+HERE = pathlib.Path(__file__).resolve().parent
+REPO_ROOT = HERE.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from general_motion_retargeting import GeneralMotionRetargeting as GMR
 from general_motion_retargeting import RobotMotionViewer
@@ -12,8 +18,6 @@ from general_motion_retargeting.utils.smpl import load_gvhmr_pred_file, get_gvhm
 from rich import print
 
 if __name__ == "__main__":
-    
-    HERE = pathlib.Path(__file__).parent
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -29,7 +33,7 @@ if __name__ == "__main__":
         choices=["unitree_g1", "unitree_g1_with_hands", "unitree_h1", "unitree_h1_2",
                  "booster_t1", "booster_t1_29dof","stanford_toddy", "fourier_n1", 
                 "engineai_pm01", "kuavo_s45", "hightorque_hi", "galaxea_r1pro", "berkeley_humanoid_lite", "booster_k1",
-                "pnd_adam_lite", "openloong", "tienkung"],
+                "pnd_adam_lite", "openloong", "tienkung", "walker"],
         default="unitree_g1",
     )
     
@@ -51,6 +55,12 @@ if __name__ == "__main__":
         default=False,
         action="store_true",
         help="Record the video.",
+    )
+
+    parser.add_argument(
+        "--video_path",
+        default=None,
+        help="Path to save the recorded video (.mp4).",
     )
 
     parser.add_argument(
@@ -84,11 +94,31 @@ if __name__ == "__main__":
         tgt_robot=args.robot,
     )
     
-    robot_motion_viewer = RobotMotionViewer(robot_type=args.robot,
-                                            motion_fps=aligned_fps,
-                                            transparent_robot=0,
-                                            record_video=args.record_video,
-                                            video_path=f"videos/{args.robot}_{args.gvhmr_pred_file.split('/')[-1].split('.')[0]}.mp4",)
+    # In headless environments (no DISPLAY), disable viewer and only save motion data.
+    has_display = bool(os.environ.get("DISPLAY"))
+    enable_viewer = has_display
+    if args.record_video and not has_display:
+        print("[WARNING] DISPLAY is missing. Disable video recording in headless mode.")
+        args.record_video = False
+
+    robot_motion_viewer = None
+    if enable_viewer:
+        video_path = args.video_path
+        if video_path is None:
+            video_path = f"videos/{args.robot}_{args.gvhmr_pred_file.split('/')[-1].split('.')[0]}.mp4"
+        video_dir = os.path.dirname(video_path)
+        if video_dir:
+            os.makedirs(video_dir, exist_ok=True)
+
+        robot_motion_viewer = RobotMotionViewer(
+            robot_type=args.robot,
+            motion_fps=aligned_fps,
+            transparent_robot=0,
+            record_video=args.record_video,
+            video_path=video_path,
+        )
+    else:
+        print("[INFO] Running in headless mode: viewer disabled.")
     
 
     curr_frame = 0
@@ -113,33 +143,36 @@ if __name__ == "__main__":
             i += 1
             if i >= len(smplx_data_frames):
                 break
-        
-        # FPS measurement
-        fps_counter += 1
-        current_time = time.time()
-        if current_time - fps_start_time >= fps_display_interval:
-            actual_fps = fps_counter / (current_time - fps_start_time)
-            print(f"Actual rendering FPS: {actual_fps:.2f}")
-            fps_counter = 0
-            fps_start_time = current_time
-        
+
+        # FPS measurement (viewer mode only)
+        if enable_viewer:
+            fps_counter += 1
+            current_time = time.time()
+            if current_time - fps_start_time >= fps_display_interval:
+                actual_fps = fps_counter / (current_time - fps_start_time)
+                print(f"Actual rendering FPS: {actual_fps:.2f}")
+                fps_counter = 0
+                fps_start_time = current_time
+
         # Update task targets.
         smplx_data = smplx_data_frames[i]
 
         # retarget
         qpos = retarget.retarget(smplx_data)
 
-        # visualize
-        robot_motion_viewer.step(
-            root_pos=qpos[:3],
-            root_rot=qpos[3:7],
-            dof_pos=qpos[7:],
-            human_motion_data=retarget.scaled_human_data,
-            # human_motion_data=smplx_data,
-            human_pos_offset=np.array([0.0, 0.0, 0.0]),
-            show_human_body_name=False,
-            rate_limit=args.rate_limit,
-        )
+        if enable_viewer:
+            # visualize
+            robot_motion_viewer.step(
+                root_pos=qpos[:3],
+                root_rot=qpos[3:7],
+                dof_pos=qpos[7:],
+                human_motion_data=retarget.scaled_human_data,
+                # human_motion_data=smplx_data,
+                human_pos_offset=np.array([0.0, 0.0, 0.0]),
+                show_human_body_name=False,
+                rate_limit=args.rate_limit,
+            )
+
         if args.save_path is not None:
             qpos_list.append(qpos)
             
@@ -166,4 +199,5 @@ if __name__ == "__main__":
             
       
     
-    robot_motion_viewer.close()
+    if robot_motion_viewer is not None:
+        robot_motion_viewer.close()

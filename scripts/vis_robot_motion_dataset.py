@@ -35,13 +35,17 @@ if __name__ == "__main__":
     if not os.path.exists(robot_motion_folder):
         raise FileNotFoundError(f"Motion data dir {robot_motion_folder} does not exist.")
     
-    motion_files = [f for f in os.listdir(robot_motion_folder) if f.endswith('.pkl')]
+    motion_files = []
+    for root, dirs, files in os.walk(robot_motion_folder):
+        for f in files:
+            if f.endswith('.pkl'):
+                motion_files.append(os.path.join(root, f))
     motion_files = sorted(motion_files)
     motion_num = len(motion_files)
     print(f"Found {motion_num} motion files in {robot_motion_folder}, loading...")
     motion_dataset = []
-    for motion_file in tqdm(motion_files):
-        motion_path = os.path.join(robot_motion_folder, motion_file)
+    for motion_path in tqdm(motion_files):
+        motion_file = os.path.relpath(motion_path, robot_motion_folder)
         motion_data, motion_fps, motion_root_pos, motion_root_rot, motion_dof_pos, motion_local_body_pos, motion_link_body_list = load_robot_motion(motion_path)
         motion_dataset.append({
             "motion_file": motion_file,
@@ -54,9 +58,11 @@ if __name__ == "__main__":
             "motion_link_body_list": motion_link_body_list,
         })
     print("Loading done.")
-    
+    if motion_num == 0:
+        raise RuntimeError(f"No .pkl files found in {robot_motion_folder}")
+
     env = RobotMotionViewer(robot_type=robot_type,
-                            motion_fps=motion_fps,
+                            motion_fps=motion_dataset[0]["motion_fps"],
                             camera_follow=False,
                             record_video=args.record_video, video_path=args.video_path, 
                             keyboard_callback=keyboard_callback)
