@@ -370,16 +370,16 @@
     <position name="shoulder_yaw_l_joint" joint="shoulder_yaw_l_joint" kp="10"/>
     <position name="elbow_pitch_l_joint" joint="elbow_pitch_l_joint" kp="10"/>
     <position name="elbow_yaw_l_joint" joint="elbow_yaw_l_joint" kp="10"/>
-    <position name="wrist_pitch_l_joint" joint="elbow_yaw_l_joint" kp="10"/>
-    <position name="wrist_roll_l_joint" joint="elbow_yaw_l_joint" kp="10"/>
+    <position name="wrist_pitch_l_joint" joint="wrist_pitch_l_joint" kp="10"/>
+    <position name="wrist_roll_l_joint" joint="wrist_roll_l_joint" kp="10"/>
 
     <position name="shoulder_pitch_r_joint" joint="shoulder_pitch_r_joint" kp="60"/>
     <position name="shoulder_roll_r_joint" joint="shoulder_roll_r_joint" kp="20"/>
     <position name="shoulder_yaw_r_joint" joint="shoulder_yaw_r_joint" kp="10"/>
     <position name="elbow_pitch_r_joint" joint="elbow_pitch_r_joint" kp="10"/>
     <position name="elbow_yaw_r_joint" joint="elbow_yaw_r_joint" kp="10"/>
-    <position name="wrist_pitch_r_joint" joint="elbow_yaw_r_joint" kp="10"/>
-    <position name="wrist_roll_r_joint" joint="elbow_yaw_r_joint" kp="10"/>
+    <position name="wrist_pitch_r_joint" joint="wrist_pitch_r_joint" kp="10"/>
+    <position name="wrist_roll_r_joint" joint="wrist_roll_r_joint" kp="10"/>
 
   </actuator>
   <sensor>

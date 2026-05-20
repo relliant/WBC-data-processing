@@ -179,7 +179,7 @@
                 0.707,0,-0.707,0
             ]
         ],
-        "wrist_pitch_l_link": [
+        "wrist_roll_l_link": [
             "left_wrist",
             0,
             10,
@@ -218,7 +218,7 @@
                 0, 0.707, 0, 0.707
             ]
         ],
-        "wrist_pitch_r_link": [
+        "wrist_roll_r_link": [
             "right_wrist",
             0,
             10,
@@ -387,7 +387,7 @@
                 0.707,0,-0.707,0
             ]
         ],
-        "wrist_pitch_l_link": [
+        "wrist_roll_l_link": [
             "left_wrist",
             100,
             5,
@@ -426,7 +426,7 @@
                 0, 0.707, 0, 0.707
             ]
         ],
-        "wrist_pitch_r_link": [
+        "wrist_roll_r_link": [
             "right_wrist",
             100,
             5,
