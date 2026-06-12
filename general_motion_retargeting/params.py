@@ -23,7 +23,7 @@ ROBOT_XML_DICT = {
     "tienkung": ASSET_ROOT / "tienkung" / "mjcf" / "tienkung.xml",
     "pal_talos": ASSET_ROOT / "pal_talos" / "talos.xml",
     "fourier_gr3": ASSET_ROOT / "fourier_gr3v2_1_1" / "mjcf" / "gr3v2_1_1_dummy_hand.xml",
-    "walker": ASSET_ROOT / "walker" / "urdf" / "walker_tienkung_ei.xml",
+    "walker": ASSET_ROOT / "walker" / "urdf" / "walker_tienkung_ei_nofinger.xml",
     "walker_nofinger": ASSET_ROOT / "walker" / "urdf" / "walker_tienkung_ei_nofinger.xml",
 }
 
